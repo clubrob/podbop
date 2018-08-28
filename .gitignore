@@ -6,4 +6,6 @@ firebase.json
 firestore.indexes.json
 firestore.rules
 storage.rules
-public/
+public/**/*.*
+public/css/style.css
+public/index.html
