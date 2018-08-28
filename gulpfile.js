@@ -96,6 +96,7 @@ gulp.task(
     ['bundleCSS', 'bundleJSDev', 'cleanHTML'],
     function browserSyncInit() {
       browser.init({
+        port: 5500,
         server: {
           baseDir: './public',
         },

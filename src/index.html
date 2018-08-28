@@ -8,14 +8,27 @@
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>PodBop</h1>
-    <input class="input" type="text" name="search_term" id="search_term">
-    <button class="button is-primary" id="search_button">Search</button>
-    <div id="results">
-      <ul></ul>
+  <section class="section">
+    <div class="container">
+      <h1 class="title is-1">PodBop</h1>
+      <div class="field">
+        <div class="control">
+          <input class="input" type="text" name="search_term" id="search_term">
+        </div>
+      </div>
+      <div class="field">
+        <div class="control">
+          <button class="button is-primary" id="search_button">Search</button>
+        </div>
+      </div>
     </div>
-  </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <div id="results">
+      </div>
+    </div>
+  </section>
   <script src="/js/app.bundle.js"></script>
 </body>
 </html>
