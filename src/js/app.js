@@ -1,58 +1,22 @@
-const slugify = require('slugify');
+const { auth, firestore } = require('./firebase-helper');
 
-const searchButton = document.querySelector('#search_button');
+const ui = require('./ui');
+const handlers = require('./event-handlers');
 
-searchButton.addEventListener('click', event => {
-  const searchTerm = document.querySelector('#search_term').value;
-
-  fetch(`https://itunes.apple.com/search?term=${searchTerm}`)
-    .then(results => results.json())
-    .then(results => {
-      let list = document.querySelector('#results');
-      list.innerHTML = '';
-      return results.results.forEach(result => {
-        if (result.kind === 'podcast') {
-          let podData = {
-            feedUrl: result.feedUrl,
-            showTitle: result.collectionName,
-            showImageUrl: result.artworkUrl600,
-            showSlug: slugify(result.collectionName),
-          };
-
-          list.innerHTML += `
-            <div class="card">
-              <div class="card-image">
-                <img src="${podData.showImageUrl}">
-              </div>
-              <div class="card-content">
-                <h4 class="subtitle is-4">
-                  ${result.collectionName}
-                </h4>
-                <button 
-                class="button is-success subscribe_button"
-                data-feedUrl="${podData.feedUrl}"
-                data-showTitle="${podData.showTitle}"
-                data-showSlug="${podData.showSlug}"
-                data-showImageUrl="${podData.showImageUrl}"
-                >
-                Subscribe
-                </button>
-              </div>
-            </div>
-          `;
-          console.log(result);
-        }
-      });
-    })
-    .catch(err => console.error(err.message));
-
-  event.preventDefault();
-});
-
-document.addEventListener('click', event => {
-  const button = event.target;
-  if (button && button.matches('.subscribe_button')) {
-    console.log(button.dataset);
-    event.preventDefault();
+auth.onAuthStateChanged(function checkUser(user) {
+  if (user) {
+    document.body.style.display = 'block';
+    ui.searchSection.style.display = 'block';
+    ui.loginSection.style.display = 'none';
+  } else {
+    document.body.style.display = 'block';
+    ui.searchSection.style.display = 'none';
+    ui.loginSection.style.display = 'block';
   }
 });
+
+ui.searchButton.addEventListener('click', handlers.searchHandler);
+ui.loginButton.addEventListener('click', handlers.login);
+
+// Delegated events
+document.addEventListener('click', handlers.createSubscription);

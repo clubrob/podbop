@@ -1,6 +1,6 @@
 @import 'bulma/css/bulma.css';
 
-#results {
+#result_cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   grid-gap: 20px;
