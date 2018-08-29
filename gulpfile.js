@@ -15,6 +15,7 @@ const terser = require('gulp-uglify-es').default;
 const webpackStream = require('webpack-stream');
 // Dev browser modules
 const browser = require('browser-sync').create();
+const historyApi = require('connect-history-api-fallback');
 
 gulp.task('clean:public', () => {
   return del(['public/**/*']);
@@ -39,6 +40,7 @@ gulp.task('bundleJSDev', () =>
             'FIREBASE_DATABASE_URL',
             'FIREBASE_PROJECT_ID',
             'FIREBASE_STORAGE_BUCKET',
+            'FIREBASE_AUTH_DOMAIN',
           ]),
         ],
       })
@@ -99,6 +101,7 @@ gulp.task(
         port: 5500,
         server: {
           baseDir: './public',
+          middleware: [historyApi()],
         },
       });
 

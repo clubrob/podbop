@@ -1,4 +1,3 @@
-const ui = require('./ui');
 const slugify = require('slugify');
 
 const eventHandlers = {

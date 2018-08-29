@@ -10,49 +10,18 @@
 </head>
 
 <body>
-  <section id="login" class="section">
-    <div class="container">
-      <h1 class="title is-1">Log In</h1>
-      <form class="form">
-        <div class="field">
-          <label for="email" class="label">Email</label>
-          <div class="control">
-            <input id="email" class="input is-primary" name="email" type="text">
-          </div>
-        </div>
-        <div class="field">
-          <label for="password" class="label">Password</label>
-          <div class="control">
-            <input id="password" class="input is-primary" name="password" type="password">
-          </div>
-        </div>
-        <div class="field">
-          <div class="control">
-            <button id="login_button" class="button is-primary">Log In</button>
-          </div>
-        </div>
-      </form>
-    </div>
-  </section>
-  <section id="search" class="section">
-    <div class="container">
-      <h1 class="title is-1">PodBop</h1>
-      <div class="field">
-        <div class="control">
-          <input class="input" type="text" name="search_term" id="search_term">
+  <nav class="navbar is-light" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand"><a class="navbar-item" href="/">PodBop</a>
+        <div class="navbar-burger" role="button" aria-label="menu" aria-expanded="false" data-target="mainNav"><span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span></div>
+      </div>
+      <div class="navbar-menu" id="mainNav">
+        <div class="navbar-start">
+          <a id="login_link" class="navbar-item" href="/login">Login</a>
+          <a id="logout_link" class="navbar-item" href="/logout">Logout</a>
         </div>
       </div>
-      <div class="field">
-        <div class="control">
-          <button class="button is-primary" id="search_button">Search</button>
-        </div>
-      </div>
-    </div>
-    <div class="container">
-      <div id="result_cards">
-      </div>
-    </div>
-  </section>
+    </nav>
+  <main id="app"></main>  
   <script src="/js/app.bundle.js"></script>
 </body>
 
