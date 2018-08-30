@@ -1,28 +1,18 @@
 const app = document.querySelector('#app');
 
-function LoginController() {
-  // UI Elements
-  this.loginSection = document.querySelector('#login');
-  this.loginButton = document.querySelector('#login_button');
-  this.email = document.querySelector('#email');
-  this.password = document.querySelector('#password');
-}
+function LoginController() {}
 
-LoginController.logout = function(event) {
+LoginController.prototype.logout = function(event) {
   firebase.auth().signOut();
   event.preventDefault();
 };
 
-LoginController.login = function(event) {
-  var email = this.email.value;
-  var password = this.password.value;
-
+LoginController.prototype.login = function(email, password) {
   firebase
     .auth()
     .signInWithEmailAndPassword(email, password)
+    .then(() => console.log('Logged in'))
     .catch(err => console.error(err.message));
-
-  event.preventDefault();
 };
 
 LoginController.prototype.show = function(context) {

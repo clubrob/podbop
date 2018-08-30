@@ -19,22 +19,28 @@ const firestore = firebase.firestore();
 const firestoreConfig = { timestampsInSnapshots: true };
 firestore.settings(firestoreConfig);
 
-console.log(auth.currentUser);
+auth.onAuthStateChanged(function checkUser(user) {
+  if (user) {
+    // console.log(auth.currentUser);
+  }
+});
 
 // Controllers
 const HomeController = require('./controllers/home-controller');
 const LoginController = require('./controllers/login-controller');
-/* const SubscriptionController = require('./controllers/subscription-controller');
-const EpisodeController = require('./controllers/episode-controller');
+const SubscriptionController = require('./controllers/subscription-controller');
+/* const EpisodeController = require('./controllers/episode-controller');
 const PlaylistController = require('./controllers/playlist-controller');
-const SearchController = require('./controllers/search-controller'); */
+*/
+const SearchController = require('./controllers/search-controller');
 
 const Home = new HomeController();
 const Login = new LoginController();
-/* const Subscription = new SubscriptionController();
-const Episode = new EpisodeController();
+const Subscription = new SubscriptionController();
+/* const Episode = new EpisodeController();
 const Playlist = new PlaylistController();
-const Search = new SearchController(); */
+*/
+const Search = new SearchController();
 
 // const handlers = require('./event-handlers');
 
@@ -55,11 +61,12 @@ auth.onAuthStateChanged(function checkUser(user) {
 
 function router() {
   page('/', Home.show);
+  page('/:showSlug', Subscription.show);
   page('/login', Login.show);
-  /* page('/:showSlug', show.load, show.show);
-  page('/:showSlug/:episodeSlug', episode.load, episode.show);
+  /* page('/:showSlug/:episodeSlug', episode.load, episode.show);
   page('/playlist/:playlistSlug', playlist.load, playlist.show);
-  page('/search', search.load, search.show); */
+   */
+  page('/search', Search.show);
   page('*', () => page('/'));
   page();
 }
@@ -72,11 +79,16 @@ function toggleMobileMenu() {
   );
   if (navbarBurgers.length > 0) {
     navbarBurgers.forEach(burger => {
-      burger.addEventListener('click', () => {
-        const target = burger.dataset.target;
-        const menu = document.querySelector(`#${target}`);
-        burger.classList.toggle('is-active');
-        menu.classList.toggle('is-active');
+      const target = burger.dataset.target;
+      const menu = document.querySelector(`#${target}`);
+      document.addEventListener('click', event => {
+        if (event.target === burger) {
+          burger.classList.toggle('is-active');
+          menu.classList.toggle('is-active');
+        } else {
+          burger.classList.remove('is-active');
+          menu.classList.remove('is-active');
+        }
       });
     });
   }
@@ -84,3 +96,43 @@ function toggleMobileMenu() {
 
 document.addEventListener('DOMContentLoaded', router);
 document.addEventListener('DOMContentLoaded', toggleMobileMenu);
+document.addEventListener('click', event => {
+  const button = event.target;
+  if (button && button.matches('#login_button')) {
+    let email = document.querySelector('#email').value;
+    let password = document.querySelector('#password').value;
+
+    Login.login(email, password);
+    event.preventDefault();
+  }
+});
+document.addEventListener('click', event => {
+  const button = event.target;
+  if (button && button.matches('#search_button')) {
+    let term = document.querySelector('#search_term').value;
+    Search.runSearch(term);
+    event.preventDefault();
+  }
+});
+document.addEventListener('click', event => {
+  const button = event.target;
+  if (button && button.matches('.subscribe_button')) {
+    const show = {
+      feedUrl: button.dataset.feedUrl,
+      showImageUrl: button.dataset.showImageUrl,
+      showTitle: button.dataset.showTitle,
+      showSlug: button.dataset.showSlug,
+      created_at: Date.now(),
+    };
+    Subscription.subscribe(show);
+    event.preventDefault();
+  }
+});
+document.addEventListener('click', event => {
+  const button = event.target;
+  if (button && button.matches('.unsubscribe_button')) {
+    const showId = button.dataset.id;
+    Subscription.unsubscribe(showId);
+    event.preventDefault();
+  }
+});

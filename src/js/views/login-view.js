@@ -7,13 +7,13 @@ function loginView(data) {
           <div class="field">
             <label for="email" class="label">Email</label>
             <div class="control">
-              <input id="email" class="input is-primary" name="email" type="text">
+              <input id="email" class="input is-primary" name="email" type="text" required>
             </div>
           </div>
           <div class="field">
             <label for="password" class="label">Password</label>
             <div class="control">
-              <input id="password" class="input is-primary" name="password" type="password">
+              <input id="password" class="input is-primary" name="password" type="password" required>
             </div>
           </div>
           <div class="field">
