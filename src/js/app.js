@@ -60,13 +60,13 @@ auth.onAuthStateChanged(function checkUser(user) {
 }); */
 
 function router() {
-  page('/', Home.show);
-  page('/:showSlug', Subscription.show);
   page('/login', Login.show);
+  page('/search', Search.show);
+  page('/', Home.show);
   /* page('/:showSlug/:episodeSlug', episode.load, episode.show);
   page('/playlist/:playlistSlug', playlist.load, playlist.show);
-   */
-  page('/search', Search.show);
+  */
+  page('/:showSlug', Subscription.show);
   page('*', () => page('/'));
   page();
 }

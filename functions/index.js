@@ -3,33 +3,35 @@ const admin = require('firebase-admin');
 admin.initializeApp();
 admin.firestore().settings({ timestampsInSnapshots: true });
 
-const FeedMe = require('feedme');
-const rp = require('request-promise');
+const feedparser = require('feedparser-promised');
 
-exports.parsingFeed = functions.firestore
+exports.savingFeedItems = functions.firestore
   .document('/subscriptions/{documentId}')
-  .onCreate(function parse(snapshot, context) {
+  .onCreate(function saveFeedItems(snapshot, context) {
     const feedUrl = snapshot.data().feedUrl;
-    return rp(feedUrl)
-      .then(feed => {
-        const parser = new FeedMe();
-        feed.pipe(parser);
-        parser.on('end', () => {
-          return parser.done();
-        })
+    feedparser
+      .parse(feedUrl)
+      .then(items => {
+        return items.splice(0, 5).map(item => {
+          let itemObj = {
+            title: item.title,
+            link: item.link,
+            mediaUrl: item.enclosures[0].url,
+            mediaLength: item.enclosures[0].length,
+          };
+          return itemObj;
+        });
       })
-      .then(json => {
-        console.log(json);
-        // console.log('Updating... ', context.params.documentId);
-        /* return snapshot.ref.set(
-          {
-            title: clipProps.title,
-            summary: clipProps.summary,
-            slug: clipProps.slug,
-          },
-          { merge: true }
-        ); */
+      .then(items => {
+        return items.forEach(item => {
+          admin
+            .firestore()
+            .collection('subscriptions')
+            .doc(snapshot.id)
+            .collection('feed_items')
+            .add(item);
+        });
       })
-      .then(res => console.log('Added additional properties: ', res))
-      .catch(err => console.error(err.message));
+      .then(() => console.log('Feed added'))
+      .catch(err => console.log(err.message));
   });

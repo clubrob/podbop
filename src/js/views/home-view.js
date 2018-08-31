@@ -1,5 +1,4 @@
 function homeView(data) {
-  console.log(data);
   let cards = '';
   data.forEach(item => {
     cards += `

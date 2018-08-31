@@ -15,7 +15,7 @@ LoginController.prototype.login = function(email, password) {
     .catch(err => console.error(err.message));
 };
 
-LoginController.prototype.show = function(context) {
+LoginController.prototype.show = function() {
   const loginView = require('../views/login-view');
   app.innerHTML = loginView();
 };

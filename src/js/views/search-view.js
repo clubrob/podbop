@@ -26,7 +26,6 @@ const searchView = {
   },
 
   searchResultsView: function(data) {
-    console.log(data);
     return `
       <div class="card">
         <div class="card-image">

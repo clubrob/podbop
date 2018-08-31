@@ -1,5 +1,6 @@
 const slugify = require('slugify');
 const { searchFormView, searchResultsView } = require('../views/search-view');
+const app = document.querySelector('#app');
 
 function SearchController() {}
 
