@@ -32,11 +32,9 @@ SubscriptionController.prototype.show = function(context) {
     .collection('subscriptions')
     .where('showSlug', '==', context.params.showSlug)
     .get()
-    .then(docSnapshot => {
-      docSnapshot.forEach(doc => {
+    .then(docSnapshots => {
+      docSnapshots.forEach(doc => {
         app.innerHTML += subscriptionMetaView(doc.data());
-        console.log(doc.data().feedUrl);
-        SubscriptionController.parseFeed(doc.data().feedUrl);
       });
       return;
     })

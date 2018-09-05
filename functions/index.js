@@ -9,28 +9,36 @@ exports.savingFeedItems = functions.firestore
   .document('/subscriptions/{documentId}')
   .onCreate(function saveFeedItems(snapshot, context) {
     const feedUrl = snapshot.data().feedUrl;
-    feedparser
+
+    return feedparser
       .parse(feedUrl)
-      .then(items => {
-        return items.splice(0, 5).map(item => {
-          let itemObj = {
-            title: item.title,
-            link: item.link,
-            mediaUrl: item.enclosures[0].url,
-            mediaLength: item.enclosures[0].length,
-          };
+      .then(results => {
+        const feed = {};
+        const items = results.slice(0, 5).map(result => {
+          let itemObj = {};
+          itemObj.title = result.title;
+          itemObj.link = result.link;
+          itemObj.mediaUrl = result.enclosures[0].url;
+          itemObj.mediaLength = result.enclosures[0].length;
           return itemObj;
         });
+
+        feed.meta = results[0].meta;
+        feed.items = items;
+        return feed;
       })
-      .then(items => {
-        return items.forEach(item => {
-          admin
-            .firestore()
-            .collection('subscriptions')
-            .doc(snapshot.id)
-            .collection('feed_items')
-            .add(item);
-        });
+      .then(feed => {
+        return admin
+          .firestore()
+          .collection('subscriptions')
+          .doc(snapshot.id)
+          .set(
+            {
+              feedItems: feed.items,
+              showUrl: feed.meta.link,
+            },
+            { merge: true }
+          );
       })
       .then(() => console.log('Feed added'))
       .catch(err => console.log(err.message));
