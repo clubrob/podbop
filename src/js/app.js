@@ -3,6 +3,7 @@ require('firebase/storage');
 require('firebase/firestore');
 require('firebase/auth');
 const page = require('page');
+const audioPlayer = require('./tools/audio-player');
 
 const firebaseConfig = {
   projectId: process.env.FIREBASE_PROJECT_ID,
@@ -97,16 +98,64 @@ function toggleMobileMenu() {
 document.addEventListener('DOMContentLoaded', router);
 document.addEventListener('DOMContentLoaded', toggleMobileMenu);
 document.addEventListener('click', event => {
-  const button = event.target;
-  if (button && button.matches('#login_button')) {
+  const eventTarget = event.target;
+  if (eventTarget && eventTarget.matches('#login_button')) {
     let email = document.querySelector('#email').value;
     let password = document.querySelector('#password').value;
 
     Login.login(email, password);
     event.preventDefault();
   }
+  if (eventTarget && eventTarget.matches('#search_button')) {
+    let term = document.querySelector('#search_term').value;
+    Search.runSearch(term);
+    event.preventDefault();
+  }
+  if (eventTarget && eventTarget.matches('.subscribe_button')) {
+    const show = {
+      feedUrl: eventTarget.dataset.feedUrl,
+      showImageUrl: eventTarget.dataset.showImageUrl,
+      showTitle: eventTarget.dataset.showTitle,
+      showSlug: eventTarget.dataset.showSlug,
+      created_at: Date.now(),
+    };
+    Subscription.subscribe(show);
+    event.preventDefault();
+  }
+  if (eventTarget && eventTarget.matches('.unsubscribe_button')) {
+    const showId = eventTarget.dataset.id;
+    Subscription.unsubscribe(showId);
+    event.preventDefault();
+  }
+  if (eventTarget && eventTarget.matches('.episode-media-url')) {
+    const audioElement = document.querySelector('#track');
+    const mediaUrl = event.target.attributes.href.value;
+    audioElement.src = mediaUrl;
+    audioElement.play();
+    event.preventDefault();
+  }
+  if (eventTarget && eventTarget.matches('.player__play')) {
+    const audioElement = document.querySelector('#track');
+    const playerProgress = document.querySelector('.player__progress');
+    audioPlayer.playTrack(audioElement, playerProgress);
+    audioPlayer.startProgress(audioElement, playerProgress);
+    event.preventDefault();
+  }
+  if (eventTarget && eventTarget.matches('.player__pause')) {
+    const audioElement = document.querySelector('#track');
+    audioPlayer.pauseTrack(audioElement);
+    event.preventDefault();
+  }
+  if (eventTarget && eventTarget.matches('.player__progress')) {
+    const audioElement = document.querySelector('#track');
+    const playerProgress = document.querySelector('.player__progress');
+    const scrubTo =
+      (event.offsetX / event.target.offsetWidth) * audioElement.duration;
+    audioPlayer.scrubTrack(audioElement, playerProgress, scrubTo);
+    event.preventDefault();
+  }
 });
-document.addEventListener('click', event => {
+/* document.addEventListener('click', event => {
   const button = event.target;
   if (button && button.matches('#search_button')) {
     let term = document.querySelector('#search_term').value;
@@ -135,4 +184,4 @@ document.addEventListener('click', event => {
     Subscription.unsubscribe(showId);
     event.preventDefault();
   }
-});
+}); */

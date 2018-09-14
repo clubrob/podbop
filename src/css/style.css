@@ -5,3 +5,44 @@
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   grid-gap: 20px;
 }
+.player__button {
+  border: 1px solid #d3d3d3;
+  background: #efefef;
+  padding: 10px 30px;
+  margin: 5px;
+  cursor: pointer;
+}
+.player__button:hover {
+  background: #d3d3d3;
+}
+.player {
+  display: flex;
+}
+.player__progress {
+  width: 100%;
+  height: auto;
+  margin: 5px;
+  border: 0;
+  background-color: #e3e3e3;
+}
+.player__progress::-webkit-progress-bar {
+  background-color: #e3e3e3;
+}
+.player__progress::-moz-progress-bar {
+  background-color: green;
+}
+.player__progress::-webkit-progress-value {
+  background-color: green;
+}
+.player__progress::-ms-fill {
+  background-color: green;
+}
+
+#subscription {
+  display: grid;
+  grid-gap: 20px;
+  grid-template-columns: 1fr 1fr;
+}
+.section__title {
+  grid-column: 1 / -1;
+}
