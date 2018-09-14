@@ -5,6 +5,12 @@
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   grid-gap: 20px;
 }
+.refresh-it {
+  background: transparent;
+  border: 0;
+  font-size: 1rem;
+  cursor: pointer;
+}
 .player__button {
   border: 1px solid #d3d3d3;
   background: #efefef;
@@ -38,11 +44,8 @@
   background-color: green;
 }
 
-#subscription {
+.subscription-grid {
   display: grid;
   grid-gap: 20px;
-  grid-template-columns: 1fr 1fr;
-}
-.section__title {
-  grid-column: 1 / -1;
+  grid-template-columns: 50% 50%;
 }

@@ -34,28 +34,19 @@ SubscriptionController.prototype.show = function(context) {
     .get()
     .then(docSnapshots => {
       docSnapshots.forEach(doc => {
-        app.innerHTML += subscriptionMetaView(doc.data());
+        app.innerHTML += subscriptionMetaView(doc);
       });
       return;
     })
     .catch(err => console.error(err.message));
 };
 
-SubscriptionController.parseFeed = function(feedUrl) {
-  fetch(feedUrl, {
-    method: 'GET',
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Upgrade-Insecure-Requests': 1,
-    },
-    mode: 'cors',
-  })
-    .then(results => results.text())
-    .then(doc => console.log(doc))
-    .catch(err => console.error(err.message));
-  /* const parser = new htmlparser.RssHandler((err, dom) => {
+SubscriptionController.prototype.refreshFeed = function(showId) {
+  const endpoint = `https://us-central1-podbop-60152.cloudfunctions.net/updateFeed?id=${showId}`;
 
-  }); */
+  return fetch(endpoint)
+    .then(res => console.log(res.text()))
+    .catch(err => console.error(err));
 };
 
 module.exports = SubscriptionController;

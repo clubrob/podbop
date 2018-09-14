@@ -35,6 +35,16 @@ function saveFeedItems(id, collection, feedObject) {
     );
 }
 
+function updateFeedItems(id, collection, feedObject) {
+  return admin
+    .firestore()
+    .collection(collection)
+    .doc(id)
+    .update({
+      feedItems: feedObject.items,
+    });
+}
+
 exports.savingFeedItems = functions.firestore
   .document('/subscriptions/{documentId}')
   .onCreate(function saveFeed(snapshot) {
@@ -49,3 +59,29 @@ exports.savingFeedItems = functions.firestore
       .then(() => console.log('Feed added'))
       .catch(err => console.log(err.message));
   });
+
+exports.updateFeed = functions.https.onRequest((req, res) => {
+  if (req.method !== 'GET') {
+    return res.status(403).send('Forbidden!');
+  }
+  const id = req.query.id;
+  const collection = 'subscriptions';
+
+  return admin
+    .firestore()
+    .collection(collection)
+    .doc(id)
+    .get()
+    .then(doc => {
+      if (doc.exists) {
+        return doc.data().feedUrl;
+      } else {
+        return res.sendStatus(404);
+      }
+    })
+    .then(feedUrl => feedparser.parse(feedUrl))
+    .then(results => prepareFeedResults(results))
+    .then(feedObject => updateFeedItems(id, collection, feedObject))
+    .then(() => res.send('updated'))
+    .catch(err => console.error(err.message));
+});

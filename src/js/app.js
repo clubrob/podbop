@@ -134,6 +134,26 @@ document.addEventListener('click', event => {
     audioElement.play();
     event.preventDefault();
   }
+  if (eventTarget && eventTarget.matches('.refresh-it')) {
+    const showId = eventTarget.dataset.id;
+    const endpoint = `https://us-central1-podbop-60152.cloudfunctions.net/updateFeed?id=${showId}`;
+
+    fetch(endpoint, {
+      mode: 'no-cors',
+    })
+      .then(res => res.text())
+      .then(res => console.log(res))
+      .catch(err => console.error(err));
+    /* Subscription.refreshFeed(showId); */
+    /*  .then(res => {
+        if (res === 'updated') {
+          return router();
+        }
+        return console.log('something happened!');
+      })
+      .catch(err => console.error(err)); */
+    event.preventDefault();
+  }
   if (eventTarget && eventTarget.matches('.player__play')) {
     const audioElement = document.querySelector('#track');
     const playerProgress = document.querySelector('.player__progress');
